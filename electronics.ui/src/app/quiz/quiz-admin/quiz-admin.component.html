@@ -1,0 +1,72 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <button pButton class="ml-2" label="Adaugă întrebare" (click)="showAddDialog = true"></button>
+  <div fxFlex="50" fxFlex.lt-md="80" class="mt-2">
+    <p-accordion>
+      <p-accordionTab *ngFor="let question of questions" [header]="question.text">
+        <p>Raspunsuri:</p>
+        <div *ngFor="let answer of question.answers">
+          <p-inplace #inplace>
+            <ng-template pTemplate="display">
+              <div>{{answer.text}}
+                <button pButton pRipple type="button" icon="pi pi-pencil"
+                        class="p-button-rounded p-button-text"></button>
+              </div>
+
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="col-12 p-0">
+                <div class="p-inputgroup">
+                  <input type="text" pInputText [(ngModel)]="answer.text">
+                  <button type="button" pButton pRipple icon="pi pi-check" (click)="inplace.deactivate()"></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-inplace>
+          <p-dropdown [options]="categories" [(ngModel)]="answer.category" optionValue="id"
+                      optionLabel="name">
+
+          </p-dropdown>
+        </div>
+        <div class="mt-2">
+          <button pButton label="Salvează" (click)="updateQuestion(question)"></button>
+          <button pButton class="ml-2 p-button-danger" label="Șterge întrebare"
+                  (click)="deleteQuestion(question.id)"></button>
+        </div>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+
+  <p-dialog header="Title" [(visible)]="showAddDialog" (onHide)="resetFields()">
+    <input type="text" placeholder="Text intrebare" pInputText [(ngModel)]="newQuestion.text"/>
+    <p>Raspunsuri:</p>
+    <input placeholder="Text" type="text" pInputText [(ngModel)]="newAnswer.text">
+    <p-dropdown [options]="categories" [(ngModel)]="newAnswer.category" optionValue="id"
+                optionLabel="name" placeholder="Categorie"></p-dropdown>
+    <button pButton label="Adaugă" [disabled]="!newAnswer.text || newAnswer.category < 0"
+            (click)="addNewAnswer()"></button>
+
+    <p-dataView #dv [value]="newQuestion.answers" [rows]="9" layout="list">
+      <ng-template pTemplate="header">
+      </ng-template>
+      <ng-template let-answer pTemplate="listItem">
+        <div class="col-12">
+          <div class="product-item">
+            <div class="product-list-detail">
+              <div class="product-name">Text: <b>{{answer.text}}</b></div>
+              <div class="product-description">Categorie:
+                <b>{{getCategoryForId(answer.category).name}}</b></div>
+            </div>
+            <div class="product-list-action">
+              <button pButton pRipple type="button" icon="pi pi-trash" (click)="deleteAnswer(answer)"
+                      class="p-button-rounded p-button-outlined p-button-danger p-button-sm"></button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+    <ng-template pTemplate="footer">
+      <button pButton label="Salvează" [disabled]="!newQuestion.text || newQuestion.answers.length === 0"
+              (click)="addNewQuestion()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

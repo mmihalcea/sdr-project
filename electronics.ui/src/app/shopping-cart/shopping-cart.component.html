@@ -1,0 +1,34 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+  <p-card fxFlex="50" fxFlex.lt-md="80">
+    <p-listbox [options]="instruments" [listStyle]="{'max-height':'30rem'}" emptyMessage="Niciun rezultat">
+      <ng-template pTemplate="header">
+        Cos de cumparaturi
+      </ng-template>
+      <ng-template let-product pTemplate="item">
+        <div class="product-item">
+          <div class="image-container">
+            <img [src]="'data:image/jpg;base64,'+ product.photos[0]" [alt]="product.name"/>
+          </div>
+          <div class="product-list-detail">
+            <h5 class="mb-2">{{product.name}}</h5>
+            <i class="pi pi-tag product-category-icon"></i>
+            <span class="product-category">{{product.category.name}}</span>
+          </div>
+          <div class="product-list-action">
+            <h6 class="mb-2">Cantitate: {{quantityDaysRentedMap.get(product.id)!.quantity}}</h6>
+            <h6 class="mb-2">{{product.price}} $</h6>
+            <p-badge [value]="product.stockStatus.value"
+                     [severity]="getSeverityByStockStatusId(product.stockStatus.id)"></p-badge>
+            <button pButton pRipple type="button" icon="pi pi-trash" (click)="deleteInstrumentFromCart(product.id)"
+                    class="p-button-rounded p-button-danger p-button-sm"></button>
+
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        Total: {{priceTotal}} $
+      </ng-template>
+    </p-listbox>
+    <button class="mt-2" pButton [disabled]="!instruments || instruments.length === 0" (click)="saveOrder()">Salveaza</button>
+  </p-card>
+</div>

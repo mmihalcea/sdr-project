@@ -1,0 +1,75 @@
+<div>
+  <p-dataView #dv [value]="products" [paginator]="true" [rows]="12" filterBy="type.id,name"
+              [sortField]="sortField" [sortOrder]="sortOrder" layout="grid">
+    <ng-template pTemplate="header">
+      <div class="flex flex-column md:flex-row md:justify-content-between">
+        <p-dropdown [options]="priceSortOptions" placeholder="Sortare după preț" (onChange)="onSortChange($event)"
+                    styleClass="mb-2 mb-md-0"></p-dropdown>
+        <p-dropdown [options]="categoryOptions" optionValue="id" optionLabel="name"
+                    placeholder="Filtrare după categorie" (onChange)="dv.filter($any($event).value, 'equals')"
+                    styleClass="mb-2 mb-md-0"></p-dropdown>
+        <span class="p-input-icon-left mb-2 md:mb-0">
+                  <i class="pi pi-search"></i>
+                          <input type="search" pInputText placeholder="Caută după nume"
+                                 (input)="dv.filter($any($event.target).value)">
+              </span>
+        <button pButton routerLink="add" class="p-button-rounded" *ngIf="userHasRole(Role.ADMIN)">Adaugă instrument
+        </button>
+        <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+      </div>
+
+    </ng-template>
+    <ng-template let-product pTemplate="listItem">
+      <div class="col-12">
+        <div class="product-list-item">
+          <img src="assets/img/background.png" [alt]="product.name"/>
+          <div class="product-list-detail">
+            <div class="product-name">{{product.name}}</div>
+            <!--          <div class="product-description">{{product.description}}</div>-->
+            <p-rating [ngModel]="product.averageRating" [readonly]="true" [cancel]="false"></p-rating>
+            <i class="pi pi-tag product-category-icon"></i><span
+            class="product-category">{{product.category.name}}</span>
+          </div>
+          <div class="product-list-action">
+            <span class="product-price">{{product.price}} $</span>
+            <button pButton [routerLink]="['/product', product.id]" class=" p-button-text">Detalii</button>
+            <p-button icon="pi pi-shopping-cart" class="p-button-rounded" label="Adaugă în coș"
+                      *ngIf="product.stockStatus.id !== 3 && !userHasRole(Role.ADMIN)"
+                      (click)="addToShoppingCart($event, product.id)"></p-button>
+            <p-badge [value]="product.stockStatus.value"
+                     [severity]="getSeverityByStockStatusId(product.stockStatus.id)"></p-badge>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template let-product pTemplate="gridItem">
+      <div class="col-12 xl:col-3 sm:col-6 md:col-3">
+        <div class="product-grid-item card shadow-3" [routerLink]="['/product', product.id]">
+          <div class="product-grid-item-top">
+            <div>
+              <i class="pi pi-tag product-category-icon"></i>
+              <span class="product-category">{{product.category.name}}</span>
+            </div>
+            <p-badge [value]="product.stockStatus.value"
+                     [severity]="getSeverityByStockStatusId(product.stockStatus.id)"></p-badge>
+          </div>
+          <div class="product-grid-item-content">
+            <img src="assets/img/background.png" [alt]="product.name"/>
+            <div class="product-name">{{product.name}}</div>
+            <!--          <div class="product-description">{{product.description}}</div>-->
+            <p-rating [ngModel]="product.averageRating" [readonly]="true" [cancel]="false"></p-rating>
+          </div>
+          <div class="product-grid-item-bottom">
+            <span class="product-price">{{product.price}} $</span>
+            <button pButton *ngIf="userHasRole(Role.ADMIN)" [routerLink]="['/product/update', product.id]"
+                    class=" p-button-text">Editare
+            </button>
+            <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded"
+                    *ngIf="product.stockStatus.id !== 3 && !userHasRole(Role.ADMIN)"
+                    (click)="addToShoppingCart($event, product.id)"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>

@@ -1,0 +1,9 @@
+
+<div class="grid p-fluid" fxLayout="column">
+  <div class="field col-12">
+    <label for="quantity">Cantitate</label>
+    <p-dropdown id="quantity" [options]="quantitiesOptions" [(ngModel)]="selectedQuantity" placeholder="Cantitate"></p-dropdown>
+  </div>
+
+  <p-button label="Adaugă" (click)="addToShoppingCart()"></p-button>
+</div>

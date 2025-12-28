@@ -1,0 +1,22 @@
+<div class="surface-card p-4 shadow-2 border-round mx-2" *ngIf="!showQuizResults">
+  <p-steps [model]="menuItems" [(activeIndex)]="activeIndex"></p-steps>
+  <div>
+    <h3>{{questions[activeIndex].text}}</h3>
+    <div *ngFor="let answer of questions[activeIndex].answers" class="field-checkbox">
+      <p-checkbox [value]="answer.id" [inputId]="answer.text" [(ngModel)]="selectedAnswers"></p-checkbox>
+      <label [for]="answer.text">{{answer.text}}</label>
+    </div>
+  </div>
+  <div>
+    <button pButton label="Continuă" [disabled]="selectedAnswers.length === 0" (click)="nextQuestion()"></button>
+  </div>
+</div>
+
+<div *ngIf="showQuizResults" class="mb-3">
+  <div class="mb-2"><h3>Recomandări produse</h3>
+    <button pButton label="Resetare chestionar" (click)="retryQuiz()"></button>
+  </div>
+
+  <app-product-list [products]="quizCompletion.products"></app-product-list>
+  <br>
+</div>

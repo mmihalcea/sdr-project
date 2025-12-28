@@ -1,0 +1,39 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+  <p-card fxFlex="25" fxFlex.lt-md="80" fxFlex.lt-sm="90" *ngIf="!forgotPassword">
+    <form fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <span class="p-float-label">
+          <input id="username" type="text" pInputText formControlName="username" class="w-full">
+          <label for="username">Username</label>
+        </span>
+      <span class="p-float-label mt-2">
+          <input id="password" pInputText formControlName="password" type="password" class="w-full">
+          <label for="password">Password</label>
+        </span>
+      <div fxLayoutAlign="space-between" class="mt-3">
+        <button pButton pRipple [disabled]="!loginForm.valid" class=" p-button-raised" type="submit">Login
+        </button>
+        <button pButton pRipple class="p-button-text" type="button" (click)="forgotPassword=true">Am uitat
+          parola
+        </button>
+      </div>
+    </form>
+  </p-card>
+
+
+  <p-card *ngIf="forgotPassword" fxFlex="25" fxFlex.lt-md="80" fxFlex.lt-sm="90">
+       <span class="p-float-label w-full">
+          <input id="email" pInputText type="email" [(ngModel)]="forgotPasswordEmail" email>
+          <label for="email">E-mail</label>
+        </span>
+    <ng-template pTemplate="footer">
+      <div fxLayoutAlign="space-between">
+        <button pButton pRipple class="p-button-text" (click)="back()">Inapoi</button>
+        <button pButton pRipple class=" p-button-raised" (click)="onForgotPasswordClick()">Trimite
+        </button>
+      </div>
+      <div class="error-message" *ngIf="forgotPasswordErrorMessage">{{forgotPasswordErrorMessage}}</div>
+      <div class="success-message" *ngIf="forgotPasswordSuccessMessage">{{forgotPasswordSuccessMessage}}</div>
+    </ng-template>
+  </p-card>
+</div>
+

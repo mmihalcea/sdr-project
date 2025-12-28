@@ -1,0 +1,64 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+  <p-card fxFlex="25" fxFlex.lt-xl="50" fxFlex.lt-md="80" fxFlex.lt-sm="90">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <span>Detalii utilizator</span>
+      <span class="p-float-label">
+          <input id="name" pInputText formControlName="name" class="w-full">
+          <label for="name">Nume</label>
+        </span>
+      <span class="p-float-label mt-2">
+          <input id="username" pInputText formControlName="username" class="w-full">
+          <label for="username">Nume utilizator</label>
+        </span>
+      <span class="p-float-label mt-2">
+          <input id="email" pInputText formControlName="email" class="w-full" type="email">
+          <label for="email">E-mail</label>
+        </span>
+      <span class="p-float-label mt-2">
+          <input id="password" pInputText formControlName="password" type="password" class="w-full">
+          <label for="password">Parola</label>
+        </span>
+      <input *ngIf="false" id="lat" pInputText formControlName="lat">
+      <input *ngIf="false" id="lon" pInputText formControlName="lon">
+      <p-divider></p-divider>
+      <span><b>Adresa</b></span>
+      <span class="p-float-label mt-2">
+         <label for="county">Judet</label>
+         <p-dropdown id="county" [options]="counties" optionLabel="name" optionValue="id"
+                     formControlName="county"></p-dropdown>
+        </span>
+
+      <div class="mt-2">Strada</div>
+      <span fxLayout="row" class="mt-2">
+
+        <p-autoComplete inputId="street" formControlName="street" [suggestions]="streetResults"
+                        (completeMethod)="searchStreet($event)" (onSelect)="onSelectAddress($event)">
+          <ng-template let-feature pTemplate="item">
+            <div>{{feature.properties.name + ', ' + feature.properties.city + ', ' + feature.properties.postcode}}</div>
+         </ng-template>
+
+        </p-autoComplete>
+
+         <span class="p-float-label">
+          <input id="city" pInputText formControlName="city" class="w-full">
+          <label for="city">Oras</label>
+        </span>
+        <span class="p-float-label">
+          <input id="postalCode" pInputText formControlName="postalCode" class="w-full">
+          <label for="postalCode">Cod postal</label>
+        </span>
+
+        </span>
+      <button pButton pRipple class="mt-2 p-button-raised" type="submit">Inregistrare
+      </button>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+      <div class="success-message" *ngIf="successMessage">{{successMessage}}</div>
+      <!--      <mat-progress-bar *ngIf="showProgressBar" mode="indeterminate"></mat-progress-bar>-->
+    </ng-template>
+  </p-card>
+
+</div>
+

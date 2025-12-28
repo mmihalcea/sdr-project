@@ -1,0 +1,35 @@
+<div fxLayout="column" fxLayoutAlign="center center" *ngIf="details">
+  <div fxLayout="row">
+    <p-card fxFlex="100" fxFlex.lt-md="80" fxFlex.lt-sm="90">
+      <h2>{{details.name}}</h2>
+      <p-galleria [value]="details.photos" [responsiveOptions]="responsiveOptions" [numVisible]="7">
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item" class="item-img"/>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+          <div class="p-grid grid-nogutter justify-content-center">
+            <img [src]="item" class="thumbnail-img"/>
+          </div>
+        </ng-template>
+      </p-galleria>
+    </p-card>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" class="mt-3">
+    <p-card fxLayout="row" fxFlex="50" fxFlex.lt-md="80" fxFlex.lt-sm="90">
+      <p-tabView>
+        <p-tabPanel header="Descriere">
+          <p>{{details.description}}</p>
+        </p-tabPanel>
+        <p-tabPanel header="Recenzii">
+          <app-product-reviews [reviews]="details.reviews" [instrumentId]="details.id"></app-product-reviews>
+        </p-tabPanel>
+      </p-tabView>
+
+    </p-card>
+  </div>
+
+</div>
+<p-button *ngIf="!userHasRole(Role.ADMIN)" icon="pi pi-shopping-cart"
+          styleClass="p-button-lg p-button-rounded p-button-raised" (click)="addToShoppingCart()" class="fab-button"></p-button>
+
+

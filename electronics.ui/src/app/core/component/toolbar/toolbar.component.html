@@ -1,0 +1,36 @@
+<p-toolbar styleClass="shadow-2 border-noround">
+  <div class="p-toolbar-group-left">
+<!--    <img style="max-height: 2.5rem" src="assets/img/logo.png" class="mr-2">-->
+    <div *ngIf="username" (mouseenter)="menu.toggle($event)" (mouseleave)="menu.toggle($event)">
+      <!--      <p-avatar [image]=""></p-avatar>-->
+      <p>{{username}}</p>
+
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+    </div>
+    <button pButton routerLink="home" class="p-button-text ml-2">Acasa</button>
+    <button pButton pRipple type="button" label="Produse" class="ml-2 p-button-text p-button-secondary"
+            routerLink="product"
+            *ngIf="userHasRole(Role.ADMIN) || userHasRole(Role.USER)|| userHasRole(Role.TEACHER)"></button>
+
+<!--    <button pButton pRipple type="button" label="Social" class="ml-2 p-button-text p-button-secondary"-->
+<!--            (click)="insertAllProd()"></button>-->
+
+    <button pButton pRipple type="button" label="Harta" *ngIf="userHasRole(Role.ADMIN)"
+            class="ml-1 p-button-text p-button-secondary"
+            routerLink="order-map"></button>
+  </div>
+
+  <div class="p-toolbar-group-right">
+    <div *ngIf="!username">
+      <button pButton routerLink="login">Login</button>
+      <button pButton routerLink="register" class="p-button-text p-ml-2">Inregistrare</button>
+    </div>
+    <div *ngIf="username">
+      <button *ngIf="!userHasRole(Role.ADMIN)" pButton routerLink="shopping-cart"
+              class="p-button-rounded p-button-text">
+        <i class="pi pi-shopping-cart" pBadge severity="info" style="font-size: 1.5rem" [value]="''+orderCount"></i>
+      </button>
+    </div>
+  </div>
+
+</p-toolbar>

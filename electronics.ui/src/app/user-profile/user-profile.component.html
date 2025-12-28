@@ -1,0 +1,71 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <p-card fxFlex="30" fxFlex.lt-md="80">
+    <form fxLayout="column" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+      <span class="p-float-label">
+        <input id="name" type="text" formControlName="name" aria-describedby="name-help" pInputText class="w-6"/>
+        <label for="name">Nume</label>
+      </span>
+
+      <span class="p-float-label mt-3">
+        <input id="username" type="text" formControlName="username" aria-describedby="username-help" class="w-6"
+               pInputText/>
+        <label for="username">Username</label>
+        <small id="username-help" *ngIf="userForm.get('username')?.invalid"
+               class="p-error">{{getFieldErrorMessage('username')}}</small>
+      </span>
+
+      <span class="p-float-label mt-3">
+        <input id="email" type="email" formControlName="email" aria-describedby="email-help" class="w-6" pInputText/>
+        <label for="username">E-mail</label>
+        <small id="email-help" *ngIf="userForm.get('email')?.invalid"
+               class="p-error">{{getFieldErrorMessage('email')}}</small>
+      </span>
+      <div formGroupName="passwords">
+      <span class="p-float-label mt-3">
+        <p-password id="password" formControlName="password" aria-describedby="password-help" [toggleMask]="true"
+                    [feedback]="false"></p-password>
+        <label for="password">Noua parola</label>
+        <small id="password-help" *ngIf="userForm.get(['passwords','password'])?.invalid"
+               class="p-error">{{getFieldErrorMessage('password')}}</small>
+      </span>
+        <span class="p-float-label mt-3">
+        <p-password id="passwordConfirm" formControlName="passwordConfirm" aria-describedby="passwordConfirm-help"
+                    [toggleMask]="true" [feedback]="false"></p-password>
+        <label for="passwordConfirm">Confirmare parola</label>
+        <small id="passwordConfirm-help" *ngIf="userForm.get(['passwords','passwordConfirm'])?.invalid"
+               class="p-error">{{getFieldErrorMessage('password')}}</small>
+      </span>
+        <div style='color:#ff7355'
+             *ngIf="userForm.get('passwords')?.errors?.invalid && userForm.get(['passwords','passwordConfirm'])?.value != ''">
+          Parolele nu coincid
+        </div>
+      </div>
+
+
+      <!--      <div fxFlex="50" fxFlex.lt-md="80" fxFlex.lt-sm="90">-->
+      <!--        <h4>Poza profil</h4>-->
+      <!--        <p-fileUpload #fileUpload [multiple]="false" [auto]="true"-->
+      <!--                      accept="image/*" [customUpload]="true" (uploadHandler)="addProfilePic($event)"-->
+      <!--                      (onRemove)="removeImage($event)" chooseLabel="Adaugă fișier">-->
+      <!--        </p-fileUpload>-->
+      <!--      </div>-->
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button pButton type="submit">Actualizare</button>
+    </ng-template>
+  </p-card>
+
+  <div *ngIf="userHasRole(Role.TEACHER)" class="mt-3" fxLayout="row" fxLayoutAlign="center center">
+    <p-card>
+    <div *ngFor="let catgory of categories" class="field-checkbox">
+      <p-checkbox [(ngModel)]="userDetails.categories" [value]="catgory.id" [inputId]="catgory.name"></p-checkbox>
+      <label [for]="catgory.name">{{catgory.name}}</label>
+    </div>
+      <ng-template pTemplate="footer">
+        <button pButton type="submit" (click)="updateCategories()">Actualizare</button>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

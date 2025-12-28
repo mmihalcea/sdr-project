@@ -1,0 +1,26 @@
+<div class="card">
+  <p-dataView #dv [value]="userOrders$ | async" [paginator]="true" [rows]="9" filterBy="name"
+              [sortField]="sortField" [sortOrder]="sortOrder" layout="list">
+    <ng-template pTemplate="header">
+      <div class="d-flex flex-column flex-md-row jc-md-between">
+        <p-dropdown [options]="sortOptions" placeholder="Sortare după preț" (onChange)="onSortChange($event)"
+                    styleClass="mb-2 mb-md-0"></p-dropdown>
+      </div>
+    </ng-template>
+    <ng-template let-order pTemplate="listItem">
+      <div class="col-12">
+        <div class="product-list-item">
+          <div class="product-list-detail">
+            <div class="product-name"> Număr comanda: {{order.id}}</div>
+            <div class="product-description">Data: {{order.orderDate | date}}</div>
+          </div>
+          <div class="product-list-action">
+            <span class="product-price">Total: {{order.priceTotal}} $</span>
+            <p-button label="Detalii" [routerLink]="['/orders', order.id]"></p-button>
+            <span [class]="'product-badge status-' + order.orderStatus.id">{{order.orderStatus.value}}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>

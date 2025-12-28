@@ -1,0 +1,36 @@
+<div  fxLayoutAlign="center center" >
+  <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()" fxFlex="25" fxFlex.lt-md="80" fxFlex.lt-sm="90" fxLayout="column">
+    <p-card >
+       <span class="p-float-label">
+          <input id="name" pInputText formControlName="name" class="w-full">
+          <label for="name">Nume</label>
+        </span>
+      <span class="p-float-label mt-2">
+          <input id="description" pInputText formControlName="description" class="w-full">
+          <label for="description">Descriere</label>
+        </span>
+
+      <span class="p-float-label mt-2">
+        <p-inputNumber id="price" formControlName="price" class="w-full" mode="decimal"
+                       [minFractionDigits]="2"></p-inputNumber>
+          <label for="price">Pret/zi</label>
+        </span>
+
+      <span class="p-float-label mt-2">
+         <label for="category">Categorie</label>
+         <p-dropdown id="category" [options]="categories" optionLabel="name" optionValue="id"
+                     formControlName="type"></p-dropdown>
+        </span>
+
+    </p-card>
+
+    <p-card fxFlex="50" fxFlex.lt-md="80" fxFlex.lt-sm="90" class="mt-4">
+      <h4>Poze instrument</h4>
+      <p-fileUpload #fileUpload [multiple]="true" [auto]="true" [files]="files2"
+                    accept="image/*" [customUpload]="true" (uploadHandler)="addImages($event)"
+                    (onRemove)="removeImage($event)" chooseLabel="Adaugă fișier">
+      </p-fileUpload>
+    </p-card>
+    <button pButton pRipple class="mt-2 p-button-raised" type="submit">Adaugare</button>
+  </form>
+</div>

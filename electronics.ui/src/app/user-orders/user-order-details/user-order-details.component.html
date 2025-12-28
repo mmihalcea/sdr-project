@@ -1,0 +1,45 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+  <p-card fxFlex="50" fxFlex.lt-md="80">
+    <ng-template pTemplate="header">
+      <h3 class="p-3">Detalii comanda nr. {{details.id}}</h3>
+      <p class="col-12">Data: {{details.orderDate | date}}</p>
+      <p class="col-12">Stare: {{details.orderStatus.value}}</p>
+      <div *ngIf="userHasRole(Role.ADMIN)">
+        <div class="col-12">Schimba status:
+          <p-dropdown [options]="statuses" optionValue="id" optionLabel="value"
+                      [(ngModel)]="details.orderStatus.id"></p-dropdown>
+          <button pButton (click)="updateOrderStatus()" [disabled]="details.orderStatus.id === initialOrderStatus">
+            Salvează
+          </button>
+        </div>
+      </div>
+      <p-listbox [options]="details.orderLines" [listStyle]="{'max-height':'30rem'}" emptyMessage="Niciun rezultat">
+        <ng-template pTemplate="header">
+          Listă produse
+        </ng-template>
+        <ng-template let-line pTemplate="item">
+          <div class="product-item">
+            <div class="image-container">
+              <img alt="photo" [src]="'data:image/jpg;base64,'+ line.product.photos[0]"/>
+            </div>
+            <div class="product-list-detail">
+              <h5 class="mb-2">{{line.instrument.name}}</h5>
+              <i class="pi pi-tag product-category-icon"></i>
+              <span class="product-category">{{line.product.category.name}}</span>
+            </div>
+            <div class="product-list-action">
+              <h6 class="mb-2">{{line.price}} $</h6>
+              <h6>Cantitate: {{line.quantity}}</h6>
+              <p-badge [value]="line.instrument.stockStatus.value"
+                       [severity]="getSeverityByStockStatusId(line.product.stockStatus.id)"></p-badge>
+
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          Total: {{details.priceTotal}} $
+        </ng-template>
+      </p-listbox>
+    </ng-template>
+  </p-card>
+</div>
