@@ -19,7 +19,6 @@ public class OrderLine {
     private Long id;
 
     private Integer quantity;
-    private Integer daysRented;
     private BigDecimal price;
 
     @ManyToOne

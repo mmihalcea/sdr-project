@@ -9,6 +9,7 @@ import edu.sdr.electronics.dto.response.ProductDetails;
 import edu.sdr.electronics.dto.response.ProductItem;
 import edu.sdr.electronics.repository.*;
 import edu.sdr.electronics.service.ProductService;
+import edu.sdr.electronics.service.RecommendationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final StockStatusRepository stockStatusRepository;
+    private final RecommendationService recommendationService;
 
     @Override
     public List<Category> getAllCategories() {
@@ -124,17 +126,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductItem> listAllProducts(List<Long> ids) {
+    public List<ProductItem> listAllProducts() {
         List<Product> products = productRepository.findAll();
-        if (ids != null) {
-            products = products.stream().filter(product -> ids.contains(product.getId())).collect(Collectors.toList());
-        }
         return products.stream().map(i -> {
             ProductItem res = modelMapper.map(i, ProductItem.class);
             res.setAverageRating(productReviewRepository.getAverageRatingByProductId(i.getId()));
             //res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
             return res;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ShoppingCartProductResponse listAllProductsForShoppingCart(List<Long> ids) {
+        List<Product> products = productRepository.findAll();
+        if (ids != null) {
+            products = products.stream().filter(product -> ids.contains(product.getId())).collect(Collectors.toList());
+        }
+        List<ProductItem> cartProducts =  products.stream().map(i -> {
+            ProductItem res = modelMapper.map(i, ProductItem.class);
+            res.setAverageRating(productReviewRepository.getAverageRatingByProductId(i.getId()));
+            //res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
+            return res;
+        }).toList();
+
+        ShoppingCartProductResponse response = new ShoppingCartProductResponse();
+        response.setShoppingCartProducts(cartProducts);
+        response.setAlsoBought(recommendationService.getAlsoBoughtProducts(cartProducts.get(0).getId()));
+        response.setAlsoBoughtTitle(cartProducts.get(0).getName());
+        return response;
     }
 
     @Override
@@ -145,6 +164,7 @@ public class ProductServiceImpl implements ProductService {
             res.setAverageRating(productReviewRepository.getAverageRatingByProductId(product.getId()));
             res.setPhotos(new ArrayList<>());
             product.getPhotos().forEach(p -> res.getPhotos().add("data:image/jpg;base64," + Base64.getEncoder().encodeToString(p.getPhoto())));
+            res.setSimilarProducts(recommendationService.getSimilarProducts(productId));
             return res;
         }
 

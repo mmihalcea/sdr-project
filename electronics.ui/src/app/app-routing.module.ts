@@ -37,7 +37,7 @@ const routes: Routes = [
   {
     path: 'shopping-cart',
     loadChildren: () => import('./shopping-cart/shopping-cart.module').then(m => m.ShoppingCartModule),
-    canActivate: [UserGuard], resolve: {instruments: ShoppingCartResolver}
+    canActivate: [UserGuard], resolve: {products: ShoppingCartResolver}
   },
   {
     path: 'order-map',

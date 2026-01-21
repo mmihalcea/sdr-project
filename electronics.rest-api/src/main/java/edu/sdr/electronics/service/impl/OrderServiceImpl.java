@@ -71,8 +71,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setProduct(product);
                 orderLine.setQuantity(ol.getQuantity());
-                orderLine.setDaysRented(ol.getDaysRented());
-                BigDecimal orderLineTotal = product.getPrice().multiply(new BigDecimal(ol.getDaysRented())).multiply(new BigDecimal(ol.getQuantity()));
+                BigDecimal orderLineTotal = product.getPrice().multiply(new BigDecimal(ol.getQuantity()));
                 orderLine.setPrice(orderLineTotal);
                 totalPrice = totalPrice.add(orderLineTotal);
                 orderLine.setStoreOrder(order);
@@ -102,7 +101,6 @@ public class OrderServiceImpl implements OrderService {
             detailsResponse.setOrderLines(new ArrayList<>());
             for (OrderLine ol : storeOrder.get().getLines()) {
                 OrderLineResponse orderLine = new OrderLineResponse();
-                orderLine.setDaysRented(ol.getDaysRented());
                 orderLine.setPrice(ol.getPrice());
                 orderLine.setProduct(modelMapper.map(ol.getProduct(), ProductItem.class));
                 orderLine.getProduct().setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(ol.getProduct().getPhotos().get(0).getPhoto())));

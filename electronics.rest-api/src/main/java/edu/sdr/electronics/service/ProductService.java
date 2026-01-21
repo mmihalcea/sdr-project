@@ -1,6 +1,7 @@
 package edu.sdr.electronics.service;
 
 import edu.sdr.electronics.domain.Category;
+import edu.sdr.electronics.domain.ShoppingCartProductResponse;
 import edu.sdr.electronics.dto.request.AddProductRequest;
 import edu.sdr.electronics.dto.request.ProductReviewRequest;
 import edu.sdr.electronics.dto.response.ProductDetails;
@@ -18,7 +19,9 @@ public interface ProductService {
 
     public void updateProduct(Long productId, AddProductRequest addProductRequest);
 
-    public List<ProductItem> listAllProducts(List<Long> ids);
+    public List<ProductItem> listAllProducts();
+
+    public ShoppingCartProductResponse listAllProductsForShoppingCart(List<Long> ids);
 
     public ProductDetails getProductDetails(Long productId);
 

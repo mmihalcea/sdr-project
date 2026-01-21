@@ -5,10 +5,11 @@ import {AddProductComponent} from './add-product/add-product.component';
 import {ProductDetailsComponent} from './product-details/product-details.component';
 import {SharedModule} from '../shared/shared.module';
 import {FileUploadModule} from 'primeng/fileupload';
-import {productListComponent} from './instrument-list/product-list.component';
-import {InstrumentReviewsComponent} from './instrument-reviews/instrument-reviews.component';
+import {productListComponent} from './product-list/product-list.component';
+import {InstrumentReviewsComponent} from './product-reviews/instrument-reviews.component';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {AddToCartDialogComponent} from './add-to-cart-dialog/add-to-cart-dialog.component';
+import { SimilarProductsComponent } from './similar-products/similar-products.component';
 
 
 @NgModule({
@@ -17,10 +18,12 @@ import {AddToCartDialogComponent} from './add-to-cart-dialog/add-to-cart-dialog.
     ProductDetailsComponent,
     productListComponent,
     InstrumentReviewsComponent,
-    AddToCartDialogComponent
+    AddToCartDialogComponent,
+    SimilarProductsComponent
   ],
   exports: [
-    productListComponent
+    productListComponent,
+    SimilarProductsComponent
   ],
   imports: [
     SharedModule,

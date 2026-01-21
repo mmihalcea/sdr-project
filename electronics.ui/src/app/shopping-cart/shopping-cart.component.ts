@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ProductItem} from '../product/instrument-list/product-item.model';
+import {ProductItem} from '../product/product-list/product-item.model';
 import {getSeverityByStockStatusId} from '../utils/functions';
 import {ShoppingCartInstrumentItem, ShoppingCartService} from './shopping-cart.service';
 import {ProductService} from '../product/product.service';
@@ -14,7 +14,9 @@ import {MessageService} from "primeng/api";
   styleUrls: ['./shopping-cart.component.scss']
 })
 export class ShoppingCartComponent implements OnInit {
-  instruments: Array<ProductItem> = [];
+  products: Array<ProductItem> = [];
+  alsoBought: Array<ProductItem> = [];
+  alsoBoughtTitle: string = "";
   getSeverityByStockStatusId = getSeverityByStockStatusId;
   priceTotal = 0;
   quantityDaysRentedMap = new Map<number, ShoppingCartInstrumentItem>();
@@ -25,18 +27,20 @@ export class ShoppingCartComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe((data) => {
-      this.instruments = data.instruments;
+      this.products = data.products.shoppingCartProducts;
+      this.alsoBought = data.products.alsoBought;
+      this.alsoBoughtTitle = "Clientii care au cumparat " + data.products.alsoBoughtTitle + " au cumparat si...";
       this.quantityDaysRentedMap = this.shoppingCartService.products;
-      if (this.instruments !== null && this.instruments.length > 0) {
-        this.priceTotal = this.instruments.map(i => i.price * this.quantityDaysRentedMap.get(i.id)!.quantity)?.reduce((a, b) => a + b);
+      if (this.products !== null && this.products.length > 0) {
+        this.priceTotal = this.products.map(i => i.price * this.quantityDaysRentedMap.get(i.id)!.quantity)?.reduce((a, b) => a + b);
       }
     });
 
     this.shoppingCartService.orderLinesUpdate$.subscribe(res => {
-      this.instruments = this.instruments.filter(i => res.has(i.id));
+      this.products = this.products.filter(i => res.has(i.id));
       this.quantityDaysRentedMap = res;
-      if (this.instruments.length > 0) {
-        this.priceTotal = this.instruments?.map(i => i.price * this.quantityDaysRentedMap.get(i.id)!.quantity)?.reduce((a, b) => a + b);
+      if (this.products.length > 0) {
+        this.priceTotal = this.products?.map(i => i.price * this.quantityDaysRentedMap.get(i.id)!.quantity)?.reduce((a, b) => a + b);
       } else {
         this.priceTotal = 0;
       }
@@ -53,7 +57,7 @@ export class ShoppingCartComponent implements OnInit {
     const orderLines = new Array<OrderLineRequest>();
 
     this.quantityDaysRentedMap.forEach((v, k) => {
-      orderLines.push({instrumentId: k, quantity: v.quantity});
+      orderLines.push({productId: k, quantity: v.quantity});
     })
     orderRequest.orderLines = orderLines;
 

@@ -13,7 +13,7 @@
       <span class="p-float-label mt-2">
         <p-inputNumber id="price" formControlName="price" class="w-full" mode="decimal"
                        [minFractionDigits]="2"></p-inputNumber>
-          <label for="price">Pret/zi</label>
+          <label for="price">Pret</label>
         </span>
 
       <span class="p-float-label mt-2">
@@ -25,7 +25,7 @@
     </p-card>
 
     <p-card fxFlex="50" fxFlex.lt-md="80" fxFlex.lt-sm="90" class="mt-4">
-      <h4>Poze instrument</h4>
+      <h4>Poze produs</h4>
       <p-fileUpload #fileUpload [multiple]="true" [auto]="true" [files]="files2"
                     accept="image/*" [customUpload]="true" (uploadHandler)="addImages($event)"
                     (onRemove)="removeImage($event)" chooseLabel="Adaugă fișier">

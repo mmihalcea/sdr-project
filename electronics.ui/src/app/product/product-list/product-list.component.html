@@ -13,7 +13,7 @@
                           <input type="search" pInputText placeholder="Caută după nume"
                                  (input)="dv.filter($any($event.target).value)">
               </span>
-        <button pButton routerLink="add" class="p-button-rounded" *ngIf="userHasRole(Role.ADMIN)">Adaugă instrument
+        <button pButton routerLink="add" class="p-button-rounded" *ngIf="userHasRole(Role.ADMIN)">Adaugă produs
         </button>
         <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
       </div>
