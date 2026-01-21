@@ -39,11 +39,9 @@ export class ProductService {
     return of();
   }
 
-  getAllProducts(ids?: number[]): Observable<Array<ProductItem>> {
+  getAllProductsWithRecommendations(): Observable<Array<ProductItem>> {
     return this.http.get<Array<ProductItem>>(this.baseProductUrl);
   }
-
-
 
   getProductDetails(instrumentId: number): Observable<ProductDetails> {
     return this.http.get<ProductDetails>(this.baseProductUrl + '/' + instrumentId);

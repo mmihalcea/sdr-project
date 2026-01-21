@@ -3,15 +3,16 @@ import {RouterModule, Routes} from '@angular/router';
 import {AddProductComponent} from './add-product/add-product.component';
 import {ProductDetailsComponent} from './product-details/product-details.component';
 import {AddProductResolver} from './add-product/add-product-resolver.service';
-import {productListComponent} from './product-list/product-list.component';
+import {ProductListComponent} from './product-list/product-list.component';
 import {ProductListResolver} from './product-list/product-list-resolver.service';
 import {ProductDetailsResolver} from './product-details/product-details-resolver.service';
 import {AdminGuard} from '../core/auth/guards/admin.guard';
 import {AnyRoleGuard} from '../core/auth/guards/any-role.guard';
+import {ProductCombinedListComponent} from "./product-combined-list/product-combined-list.component";
 
 const routes: Routes = [{
   path: '',
-  component: productListComponent,
+  component: ProductCombinedListComponent,
   resolve: {products: ProductListResolver}
 }, {
   path: 'add',
@@ -22,7 +23,6 @@ const routes: Routes = [{
   {
     path: ':productId',
     component: ProductDetailsComponent,
-    canActivate: [AnyRoleGuard],
     resolve: {details: ProductDetailsResolver}
   },
   {

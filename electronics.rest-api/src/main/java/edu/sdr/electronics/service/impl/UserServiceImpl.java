@@ -43,11 +43,11 @@ public class UserServiceImpl implements UserService {
         StoreUser user = this.userRepository.findByUsername(profileUer.getUsername()).orElse(null);
         if (user != null) {
             if (profileUer.getPassword() != null && !profileUer.getPassword().isEmpty()) {
-                user.setPassword(this.encoder.encode(profileUer.getPassword()));
+                user.setPassword(profileUer.getPassword());
             }
             user.setEmail(profileUer.getEmail());
             user.setProfilePic(profileUer.getProfilePic());
-            this.userRepository.save(this.modelMapper.map(user, StoreUser.class));
+            this.userRepository.save(user);
         }
 
     }

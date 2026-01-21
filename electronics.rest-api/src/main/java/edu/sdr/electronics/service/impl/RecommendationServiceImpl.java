@@ -1,15 +1,13 @@
 package edu.sdr.electronics.service.impl;
 
-import edu.sdr.electronics.domain.OrderLine;
-import edu.sdr.electronics.domain.Product;
+import edu.sdr.electronics.domain.*;
 import edu.sdr.electronics.dto.response.ProductItem;
-import edu.sdr.electronics.repository.OrderLineRepository;
-import edu.sdr.electronics.repository.ProductRepository;
-import edu.sdr.electronics.repository.ProductReviewRepository;
+import edu.sdr.electronics.repository.*;
 import edu.sdr.electronics.service.RecommendationService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.text.similarity.CosineSimilarity;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -24,6 +22,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final ProductRepository productRepository;
     private final ProductReviewRepository productReviewRepository;
     private final OrderLineRepository orderLineRepository;
+    private final StoreUserRepository storeUserRepository;
+    private final UserSimilarityScoreRepository userSimilarityScoreRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -65,40 +65,78 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public List<ProductItem> getAlsoBoughtProducts(Long productId) {
+    public Set<ProductItem> getAlsoBoughtProducts(Long productId) {
         Product product = productRepository.findById(productId).orElse(null);
         if (product != null) {
             List<OrderLine> orderLines = orderLineRepository.findByProduct(product);
             List<Long> orderIds = orderLines.stream().map(ol -> ol.getStoreOrder().getId()).collect(Collectors.toList());
 
-
+            // This is a simplification. A real implementation would need a more efficient way to get the other products.
             List<Product> alsoBought = orderLineRepository.findAll().stream()
                     .filter(ol -> orderIds.contains(ol.getStoreOrder().getId()))
                     .map(OrderLine::getProduct)
                     .filter(p -> !p.getId().equals(productId))
                     .distinct()
-                    .limit(4)
+                    .limit(5)
                     .collect(Collectors.toList());
 
             return alsoBought.stream()
-                    .limit(5)
                     .map(p -> {
                         ProductItem item = modelMapper.map(p, ProductItem.class);
                         item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
+                        item.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto())));
                         return item;
                     })
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         }
-        return List.of();
+        return Set.of();
     }
 
     @Override
     public List<ProductItem> getHomepageRecommendations() {
-        List<Product> mostReviewedProducts = productReviewRepository.findMostReviewedProducts();
-        return mostReviewedProducts.stream()
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        StoreUser currentUser = storeUserRepository.findByUsername(username).orElse(null);
+
+        if (currentUser == null) {
+            // user ne-autentificat: produse cu cele mai multe recenzii
+            List<Product> mostReviewedProducts = productReviewRepository.findMostReviewedProducts();
+            return mostReviewedProducts.stream()
+                    .map(p -> {
+                        ProductItem item = modelMapper.map(p, ProductItem.class);
+                        item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
+                        item.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto())));
+                        return item;
+                    })
+                    .limit(8)
+                    .collect(Collectors.toList());
+        }
+
+        List<UserSimilarityScore> similarUsers = userSimilarityScoreRepository.findByUser1(currentUser);
+        similarUsers.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
+
+        List<Product> recommendedProducts = similarUsers.stream()
+                .limit(10)
+                .flatMap(similarity -> {
+                    StoreUser similarUser = similarity.getUser2();
+                    return productReviewRepository.findAll().stream()
+                            .filter(review -> review.getStoreUser().equals(similarUser) && review.getRating() >= 4);
+                })
+                .map(ProductReview::getProduct)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Filtrare prodeuje deja cu recenzii de la userul curent
+        List<Long> reviewedProductIds = productReviewRepository.findAll().stream()
+                .filter(review -> review.getStoreUser().equals(currentUser))
+                .map(review -> review.getProduct().getId())
+                .collect(Collectors.toList());
+
+        return recommendedProducts.stream()
+                .filter(product -> !reviewedProductIds.contains(product.getId()))
                 .map(p -> {
                     ProductItem item = modelMapper.map(p, ProductItem.class);
                     item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
+                    item.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto())));
                     return item;
                 })
                 .limit(8)

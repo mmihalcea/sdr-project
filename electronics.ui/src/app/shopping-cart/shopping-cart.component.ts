@@ -22,7 +22,7 @@ export class ShoppingCartComponent implements OnInit {
   quantityDaysRentedMap = new Map<number, ShoppingCartInstrumentItem>();
 
   constructor(private activatedRoute: ActivatedRoute, public shoppingCartService: ShoppingCartService,
-              private instrumentService: ProductService, private messageService: MessageService) {
+               private messageService: MessageService) {
   }
 
   ngOnInit(): void {

@@ -34,13 +34,14 @@ public class AuthenticationController {
     private final JWTService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, @RequestHeader("User-Agent") String userAgent) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        authenticationService.updateUserAgent(userDetails.getUsername(), userAgent);
         String jwtToken = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(jwtToken, userDetails.getUsername(), userDetails.getAuthorities()));
@@ -48,7 +49,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody StoreUser registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody StoreUser registerRequest, @RequestHeader("User-Agent") String userAgent) {
         if (storeUserRepository.existsByUsername(registerRequest.getUsername())) {
             return new ResponseEntity<>(new ResponseMessage("Numele utilizator exista!"),
                     HttpStatus.BAD_REQUEST);
@@ -59,7 +60,7 @@ public class AuthenticationController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        this.authenticationService.registerUser(registerRequest);
+        this.authenticationService.registerUser(registerRequest, userAgent);
 
         return new ResponseEntity<>(new ResponseMessage("Utilizator inregistrat cu success!"), HttpStatus.OK);
     }

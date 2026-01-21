@@ -89,3 +89,10 @@ INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (4, '
 INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (5, 'În rucsac/geantă, mereu cu mine în deplasări.', 10, 2);
 INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (6, 'Într-un punct fix din living sau dormitor, ca piesă centrală.', 23, 2);
 
+UPDATE public.store_user SET password = 'test123A#' WHERE username = 'testtest';
+UPDATE public.store_user SET password = 'test123A#' WHERE username = 'adminadmin';
+
+--user fara reviews
+INSERT INTO public.store_user (id, email, name, password, profile_pic, username, address_id)
+VALUES
+    (202, 'user200_989898@mock.local', 'User 200', '=mock_password_201', NULL, 'user201_28221', 1),

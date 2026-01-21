@@ -13,4 +13,5 @@ public class ProductDetails extends ProductItem {
     private String description;
     private List<ProductReviewResponse> reviews;
     private Set<ProductItem> similarProducts;
+    private Set<ProductItem> alsoBoughtProducts;
 }

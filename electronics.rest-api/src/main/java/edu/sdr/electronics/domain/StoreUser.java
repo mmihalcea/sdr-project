@@ -38,6 +38,9 @@ public class StoreUser {
     @Column(nullable = false)
     private String password;
 
+    private String browser;
+    private String operatingSystem;
+
     @Lob
     private byte[] profilePic;
 

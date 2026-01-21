@@ -16,8 +16,9 @@ import {IdName} from "../../utils/id-name.model";
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
-export class productListComponent implements OnInit, AfterViewInit {
+export class ProductListComponent implements OnInit {
   @Input() products: Array<ProductItem> = [];
+  @Input() hideFilters: boolean = false;
   priceSortOptions: SelectItem[] = [];
   categoryOptions: IdName[] = [];
   sortOrder = 0;
@@ -30,11 +31,6 @@ export class productListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.products.length === 0) {
-      this.activatedRoute.data.subscribe((data) => {
-        this.products = data.products;
-      });
-    }
     this.priceSortOptions = [
       {label: 'Descrescător', value: '!price'},
       {label: 'Crescător', value: 'price'}
@@ -71,14 +67,5 @@ export class productListComponent implements OnInit, AfterViewInit {
       }
     })
     event.stopPropagation();
-  }
-
-  ngAfterViewInit(): void {
-    console.log('AFI')
-  }
-
-  logSmt(event: any) {
-    console.log('selected', event.target.value)
-    //this.filterService.filter()
   }
 }

@@ -1,7 +1,7 @@
 <div>
   <p-dataView #dv [value]="products" [paginator]="true" [rows]="12" filterBy="type.id,name"
               [sortField]="sortField" [sortOrder]="sortOrder" layout="grid">
-    <ng-template pTemplate="header">
+    <ng-template pTemplate="header" *ngIf="!hideFilters">
       <div class="flex flex-column md:flex-row md:justify-content-between">
         <p-dropdown [options]="priceSortOptions" placeholder="Sortare după preț" (onChange)="onSortChange($event)"
                     styleClass="mb-2 mb-md-0"></p-dropdown>
@@ -43,7 +43,7 @@
       </div>
     </ng-template>
     <ng-template let-product pTemplate="gridItem">
-      <div class="col-12 xl:col-3 sm:col-6 md:col-3">
+      <div class="col-12 xl:col-3 sm:col-6 md:col-4">
         <div class="product-grid-item card shadow-3" [routerLink]="['/product', product.id]">
           <div class="product-grid-item-top">
             <div>

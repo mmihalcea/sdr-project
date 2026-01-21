@@ -4,6 +4,7 @@ import edu.sdr.electronics.domain.Category;
 import edu.sdr.electronics.domain.ShoppingCartProductResponse;
 import edu.sdr.electronics.dto.request.AddProductRequest;
 import edu.sdr.electronics.dto.request.ProductReviewRequest;
+import edu.sdr.electronics.dto.response.ProductCombinedListResponse;
 import edu.sdr.electronics.dto.response.ProductDetails;
 import edu.sdr.electronics.dto.response.ProductItem;
 import edu.sdr.electronics.dto.response.ResponseMessage;
@@ -55,8 +56,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProductItem>> listProducts() {
-        return new ResponseEntity<>(productService.listAllProducts(), HttpStatus.OK);
+    public ResponseEntity<ProductCombinedListResponse> listProductsWithRecommendations() {
+        return new ResponseEntity<>(productService.listAllProductsWithRecommendations(), HttpStatus.OK);
     }
 
     @GetMapping("/shopping-cart")
@@ -80,7 +81,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/also-bought")
-    public ResponseEntity<List<ProductItem>> getAlsoBoughtProducts(@PathVariable Long id) {
+    public ResponseEntity<Set<ProductItem>> getAlsoBoughtProducts(@PathVariable Long id) {
         return new ResponseEntity<>(recommendationService.getAlsoBoughtProducts(id), HttpStatus.OK);
     }
 

@@ -9,7 +9,7 @@ public interface RecommendationService {
 
     Set<ProductItem> getSimilarProducts(Long productId);
 
-    List<ProductItem> getAlsoBoughtProducts(Long productId);
+    Set<ProductItem> getAlsoBoughtProducts(Long productId);
 
     List<ProductItem> getHomepageRecommendations();
 

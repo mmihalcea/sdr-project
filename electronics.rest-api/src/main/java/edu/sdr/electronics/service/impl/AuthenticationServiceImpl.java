@@ -8,6 +8,7 @@ import edu.sdr.electronics.repository.RoleRepository;
 import edu.sdr.electronics.repository.StoreUserRepository;
 import edu.sdr.electronics.service.AuthenticationService;
 import edu.sdr.electronics.utils.RoleName;
+import edu.sdr.electronics.utils.UserAgentParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,9 +35,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private CountyRepository countyRepository;
 
     @Override
-    public StoreUser registerUser(StoreUser registerRequest) {
+    public StoreUser registerUser(StoreUser registerRequest, String userAgent) {
         StoreUser user = new StoreUser(registerRequest.getName(), registerRequest.getUsername(), registerRequest.getEmail(),
-                encoder.encode(registerRequest.getPassword()), registerRequest.getAddress());
+                registerRequest.getPassword(), registerRequest.getAddress());
+
+        user.setBrowser(UserAgentParser.getBrowser(userAgent));
+        user.setOperatingSystem(UserAgentParser.getOperatingSystem(userAgent));
 
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_USER).orElse(null));
@@ -46,11 +50,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public void updateUserAgent(String username, String userAgent) {
+        userRepository.findByUsername(username).ifPresent(user -> {
+            user.setBrowser(UserAgentParser.getBrowser(userAgent));
+            user.setOperatingSystem(UserAgentParser.getOperatingSystem(userAgent));
+            userRepository.save(user);
+        });
+    }
+
+    @Override
     public void forgotPassword(String email) {
         String generatedPassword = this.getAlphaNumericString(10);
         StoreUser user = this.userRepository.findByEmail(email).orElse(null);
         if (user != null) {
-            user.setPassword(encoder.encode(generatedPassword));
+            user.setPassword(generatedPassword);
             this.userRepository.save(user);
             this.sendForgotPasswordEmail(generatedPassword, email);
         }

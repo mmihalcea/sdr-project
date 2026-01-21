@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 public class ShoppingCartProductResponse {
     List<ProductItem> shoppingCartProducts;
-    List<ProductItem> alsoBought;
+    Set<ProductItem> alsoBought;
     String alsoBoughtTitle;
 }

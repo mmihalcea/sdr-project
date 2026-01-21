@@ -5,6 +5,7 @@ import edu.sdr.electronics.domain.*;
 import edu.sdr.electronics.dto.request.AddProductRequest;
 import edu.sdr.electronics.dto.request.ProductReviewRequest;
 import edu.sdr.electronics.dto.response.ProductCSV;
+import edu.sdr.electronics.dto.response.ProductCombinedListResponse;
 import edu.sdr.electronics.dto.response.ProductDetails;
 import edu.sdr.electronics.dto.response.ProductItem;
 import edu.sdr.electronics.repository.*;
@@ -126,14 +127,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductItem> listAllProducts() {
+    public ProductCombinedListResponse listAllProductsWithRecommendations() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(i -> {
+        ProductCombinedListResponse response = new ProductCombinedListResponse();
+        response.setProducts(products.stream().map(i -> {
             ProductItem res = modelMapper.map(i, ProductItem.class);
             res.setAverageRating(productReviewRepository.getAverageRatingByProductId(i.getId()));
             res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
             return res;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()));
+        response.setRecommendations(recommendationService.getHomepageRecommendations());
+        return response;
     }
 
     @Override
@@ -165,6 +169,7 @@ public class ProductServiceImpl implements ProductService {
             res.setPhotos(new ArrayList<>());
             product.getPhotos().forEach(p -> res.getPhotos().add("data:image/jpg;base64," + Base64.getEncoder().encodeToString(p.getPhoto())));
             res.setSimilarProducts(recommendationService.getSimilarProducts(productId));
+            res.setAlsoBoughtProducts(recommendationService.getAlsoBoughtProducts(productId));
             return res;
         }
 

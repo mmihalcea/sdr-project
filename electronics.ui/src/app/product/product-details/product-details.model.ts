@@ -7,4 +7,5 @@ export interface ProductDetails extends ProductItem {
   rating: number;
   reviews: Array<ProductReviewResponse>
   similarProducts: Array<ProductItem>
+  alsoBoughtProducts: Array<ProductItem>
 }

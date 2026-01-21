@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface AuthenticationService {
 
-    StoreUser registerUser(StoreUser user);
+    StoreUser registerUser(StoreUser user, String userAgent);
+
+    void updateUserAgent(String username, String userAgent);
 
     void forgotPassword(String email);
 

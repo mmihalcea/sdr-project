@@ -9,8 +9,7 @@
     </div>
     <button pButton routerLink="home" class="p-button-text ml-2">Acasa</button>
     <button pButton pRipple type="button" label="Produse" class="ml-2 p-button-text p-button-secondary"
-            routerLink="product"
-            *ngIf="userHasRole(Role.ADMIN) || userHasRole(Role.USER)|| userHasRole(Role.TEACHER)"></button>
+            routerLink="product"></button>
 
 <!--    <button pButton pRipple type="button" label="Social" class="ml-2 p-button-text p-button-secondary"-->
 <!--            (click)="insertAllProd()"></button>-->
@@ -26,7 +25,7 @@
       <button pButton routerLink="register" class="p-button-text p-ml-2">Inregistrare</button>
     </div>
     <div *ngIf="username">
-      <button *ngIf="!userHasRole(Role.ADMIN)" pButton routerLink="shopping-cart"
+      <button *ngIf="!userHasRole(Role.ADMIN)" pButton routerLink="/shopping-cart"
               class="p-button-rounded p-button-text">
         <i class="pi pi-shopping-cart" pBadge severity="info" style="font-size: 1.5rem" [value]="''+orderCount"></i>
       </button>
