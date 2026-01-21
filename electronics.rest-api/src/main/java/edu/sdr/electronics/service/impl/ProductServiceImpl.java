@@ -131,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
         return products.stream().map(i -> {
             ProductItem res = modelMapper.map(i, ProductItem.class);
             res.setAverageRating(productReviewRepository.getAverageRatingByProductId(i.getId()));
-            //res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
+            res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
             return res;
         }).collect(Collectors.toList());
     }
@@ -145,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductItem> cartProducts =  products.stream().map(i -> {
             ProductItem res = modelMapper.map(i, ProductItem.class);
             res.setAverageRating(productReviewRepository.getAverageRatingByProductId(i.getId()));
-            //res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
+            res.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(i.getPhotos().get(0).getPhoto())));
             return res;
         }).toList();
 

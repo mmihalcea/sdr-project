@@ -38,7 +38,27 @@ public class RecommendationServiceImpl implements RecommendationService {
             });
             List<Map.Entry<Long, Double>> similarityResult = similarityMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).toList();
 
-            return similarityResult.stream().limit(5).map(res -> allProducts.stream().filter(p -> p.getId().equals(res.getKey())).map(p -> modelMapper.map(p, ProductItem.class)).findFirst().get()).collect(Collectors.toSet());
+            return similarityResult.stream()
+                    .limit(5)
+                    .map(res -> allProducts.stream()
+                            .filter(p -> p.getId().equals(res.getKey()))
+                            .findFirst()
+                            .orElse(null)
+                    )
+                    .filter(Objects::nonNull)
+                    .map(p -> {
+                        ProductItem item = modelMapper.map(p, ProductItem.class);
+
+                        if (p.getPhotos() != null && !p.getPhotos().isEmpty() && p.getPhotos().get(0).getPhoto() != null) {
+                            String b64 = Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto());
+                            item.setPhotos(Collections.singletonList(b64));
+                        } else {
+                            item.setPhotos(Collections.emptyList());
+                        }
+
+                        return item;
+                    })
+                    .collect(Collectors.toSet());
         }
 
         return null;

@@ -22,7 +22,7 @@
     <ng-template let-product pTemplate="listItem">
       <div class="col-12">
         <div class="product-list-item">
-          <img src="assets/img/background.png" [alt]="product.name"/>
+          <img [src]="'data:image/jpeg;base64,' + product.photos[0]" [alt]="product.name"/>
           <div class="product-list-detail">
             <div class="product-name">{{product.name}}</div>
             <!--          <div class="product-description">{{product.description}}</div>-->
@@ -54,7 +54,7 @@
                      [severity]="getSeverityByStockStatusId(product.stockStatus.id)"></p-badge>
           </div>
           <div class="product-grid-item-content">
-            <img src="assets/img/background.png" [alt]="product.name"/>
+            <img [src]="'data:image/jpeg;base64,' + product.photos[0]" [alt]="product.name"/>
             <div class="product-name">{{product.name}}</div>
             <!--          <div class="product-description">{{product.description}}</div>-->
             <p-rating [ngModel]="product.averageRating" [readonly]="true" [cancel]="false"></p-rating>

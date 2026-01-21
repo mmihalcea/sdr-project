@@ -17,5 +17,9 @@ export class SimilarProductsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openProduct(id: number) {
+    window.location.assign(`/product/${id}`);
+  }
+
   protected readonly getSeverityByStockStatusId = getSeverityByStockStatusId;
 }
