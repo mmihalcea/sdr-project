@@ -76,3 +76,16 @@ VALUES
     (2, 2);
 
 
+
+
+INSERT INTO public.quiz_question (id, text) VALUES (1, 'Care este scopul principal pentru care cauți un produs nou astăzi?');
+INSERT INTO public.quiz_question (id, text) VALUES (2, 'Unde vei folosi cel mai des acest dispozitiv?');
+
+
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (1, 'Vreau o stație de lucru puternică pentru gaming, editare video sau programare intensivă', 11, 1);
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (2, 'Am nevoie de un dispozitiv pe care să pot lucra, învăța sau naviga pe internet de oriunde (acasă, birou, cafenea)', 18, 1);
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (3, 'Vreau ceva ultra-portabil pentru relaxare, citit, social media sau pentru a ține copiii ocupați.', 17, 1);
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (4, 'Fix, pe un birou, conectat permanent la priză și la un monitor.', 11, 2);
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (5, 'În rucsac/geantă, mereu cu mine în deplasări.', 18, 2);
+INSERT INTO public.quiz_answer (id, text, category_id, question_id) VALUES (6, 'Într-un punct fix din living sau dormitor, ca piesă centrală.', 30, 2);
+
