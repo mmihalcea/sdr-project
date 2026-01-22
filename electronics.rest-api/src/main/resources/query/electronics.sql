@@ -95,4 +95,9 @@ UPDATE public.store_user SET password = 'test123A#' WHERE username = 'adminadmin
 --user fara reviews
 INSERT INTO public.store_user (id, email, name, password, profile_pic, username, address_id)
 VALUES
-    (202, 'user200_989898@mock.local', 'User 200', '=mock_password_201', NULL, 'user201_28221', 1),
+    (202, 'user200_989898@mock.local', 'User 200', '=mock_password_201', NULL, 'user201_28221', 1);
+
+UPDATE store_user SET address_id =2 where id % 2 = 0;
+UPDATE store_user SET address_id =3 where id % 3 = 0;
+UPDATE store_user SET address_id =4 where id % 4 = 0;
+UPDATE store_user SET address_id =5 where id % 5 = 0;
