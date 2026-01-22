@@ -51,15 +51,28 @@ public class UserSimilarityService {
                 if (user1.getAddress() != null && user2.getAddress() != null &&
                     user1.getAddress().getCounty() != null && user2.getAddress().getCounty() != null &&
                     user1.getAddress().getCounty().equals(user2.getAddress().getCounty())) {
-                    similarity *= 1.2;
+                    if(similarity == 0){
+                        similarity = 0.3;
+                    }else{
+                        similarity *= 1.2;
+                    }
+
                 }
 
                 if (user1.getOperatingSystem() != null && user1.getOperatingSystem().equals(user2.getOperatingSystem())) {
-                    similarity *= 1.1;
+                    if(similarity == 0){
+                        similarity = 0.1;
+                    }else{
+                        similarity *= 1.1;
+                    }
                 }
 
                 if (user1.getBrowser() != null && user1.getBrowser().equals(user2.getBrowser())) {
-                    similarity *= 1.1;
+                    if(similarity == 0){
+                        similarity = 0.1;
+                    }else{
+                        similarity *= 1.1;
+                    }
                 }
 
                 double finalScore = Math.min(similarity, 1.0);

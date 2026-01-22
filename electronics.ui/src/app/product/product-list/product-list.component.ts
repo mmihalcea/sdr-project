@@ -19,6 +19,7 @@ import {IdName} from "../../utils/id-name.model";
 export class ProductListComponent implements OnInit {
   @Input() products: Array<ProductItem> = [];
   @Input() hideFilters: boolean = false;
+  @Input() hidePagination: boolean = false;
   priceSortOptions: SelectItem[] = [];
   categoryOptions: IdName[] = [];
   sortOrder = 0;

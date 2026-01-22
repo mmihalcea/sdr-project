@@ -98,20 +98,14 @@ public class RecommendationServiceImpl implements RecommendationService {
         StoreUser currentUser = storeUserRepository.findByUsername(username).orElse(null);
 
         if (currentUser == null) {
-            // user ne-autentificat: produse cu cele mai multe recenzii
-            List<Product> mostReviewedProducts = productReviewRepository.findMostReviewedProducts();
-            return mostReviewedProducts.stream()
-                    .map(p -> {
-                        ProductItem item = modelMapper.map(p, ProductItem.class);
-                        item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
-                        item.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto())));
-                        return item;
-                    })
-                    .limit(8)
-                    .collect(Collectors.toList());
+            return getMostReviewedProducts();
         }
 
         List<UserSimilarityScore> similarUsers = userSimilarityScoreRepository.findByUser1(currentUser);
+        if(similarUsers.isEmpty()){
+            return getMostReviewedProducts();
+        }
+
         similarUsers.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
 
         List<Product> recommendedProducts = similarUsers.stream()
@@ -125,7 +119,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        // Filtrare prodeuje deja cu recenzii de la userul curent
+        // Filtrare produse deja cu recenzii de la userul curent
         List<Long> reviewedProductIds = productReviewRepository.findAll().stream()
                 .filter(review -> review.getStoreUser().equals(currentUser))
                 .map(review -> review.getProduct().getId())
@@ -133,6 +127,19 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         return recommendedProducts.stream()
                 .filter(product -> !reviewedProductIds.contains(product.getId()))
+                .map(p -> {
+                    ProductItem item = modelMapper.map(p, ProductItem.class);
+                    item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
+                    item.setPhotos(Collections.singletonList(Base64.getEncoder().encodeToString(p.getPhotos().get(0).getPhoto())));
+                    return item;
+                })
+                .limit(8)
+                .collect(Collectors.toList());
+    }
+
+    private List<ProductItem> getMostReviewedProducts() {
+        List<Product> mostReviewedProducts = productReviewRepository.findMostReviewedProducts();
+        return mostReviewedProducts.stream()
                 .map(p -> {
                     ProductItem item = modelMapper.map(p, ProductItem.class);
                     item.setAverageRating(productReviewRepository.getAverageRatingByProductId(p.getId()));
